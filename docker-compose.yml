@@ -1,0 +1,47 @@
+version: '3.5'
+
+services:
+
+  broker:
+    image: eclipse-mosquitto
+    networks:
+      - net
+    expose:
+      - "1883"
+      - "9001"
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  server:
+    image: quarkus/iot-server-jvm
+    networks:
+      - net
+    environment:
+      - mqtt.broker.host=broker
+      - mqtt.broker.port=1883
+      - mqtt.broker.topic=data
+    ports:
+      - 9081:9081
+    depends_on:
+      - broker
+    
+  client:
+    image: quarkus/iot-client-jvm
+    networks:
+      - net
+    environment:
+      - server.base.url=http://server:9081
+      - mqtt.broker.host=broker
+      - mqtt.broker.port=1883
+      - mqtt.broker.topic=data
+    ports:
+      - 9080:9080
+    depends_on:
+      - broker
+      - server
+
+networks:
+  net:
