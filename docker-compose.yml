@@ -8,23 +8,30 @@ services:
       - net
     expose:
       - "1883"
+      - "8883"
       - "9001"
     ports:
       - "1883:1883"
+      - "8883:8883"
       - "9001:9001"
     volumes:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-
+      - ./mosquitto/ca_certificates/:/etc/mosquitto/ca_certificates/
+      - ./mosquitto/certs/:/etc/mosquitto/certs/
   server:
     image: quarkus/iot-server-jvm
     networks:
       - net
     environment:
+      - mqtt.broker.protocol=ssl
       - mqtt.broker.host=broker
-      - mqtt.broker.port=1883
+      - mqtt.broker.port=8883
       - mqtt.broker.topic=data
     ports:
       - 9081:9081
+    volumes:
+      - ./mosquitto/ca_certificates/:/opt/bigfinite/ca_certificates/
+      - ./mosquitto/certs/:/opt/bigfinite/certs/
     depends_on:
       - broker
     
@@ -34,11 +41,15 @@ services:
       - net
     environment:
       - server.base.url=http://server:9081
+      - mqtt.broker.protocol=ssl
       - mqtt.broker.host=broker
-      - mqtt.broker.port=1883
+      - mqtt.broker.port=8883
       - mqtt.broker.topic=data
     ports:
       - 9080:9080
+    volumes:
+      - ./mosquitto/ca_certificates/:/opt/bigfinite/ca_certificates/
+      - ./mosquitto/certs/:/opt/bigfinite/certs/
     depends_on:
       - broker
       - server
