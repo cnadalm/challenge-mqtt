@@ -19,6 +19,9 @@ public class MqttSubscriber {
 
     private IMqttClient subscriber = null;
 
+    @ConfigProperty(name = "mqtt.broker.protocol")
+    String mqttBrokerProtocol;
+
     @ConfigProperty(name = "mqtt.broker.host")
     String mqttBrokerHost;
 
@@ -38,7 +41,7 @@ public class MqttSubscriber {
 
     void init() throws MqttException {
         String clientId = UUID.randomUUID().toString();
-        subscriber = new MqttClient("tcp://" + mqttBrokerHost + ":" + mqttBrokerPort, clientId);
+        subscriber = new MqttClient(mqttBrokerProtocol + "://" + mqttBrokerHost + ":" + mqttBrokerPort, clientId);
 
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);

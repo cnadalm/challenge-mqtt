@@ -16,6 +16,9 @@ public class MqttPublisher {
 
     static final Logger LOGGER = Logger.getLogger(MqttPublisher.class.getName());
 
+    @ConfigProperty(name = "mqtt.broker.protocol")
+    String mqttBrokerProtocol;
+
     @ConfigProperty(name = "mqtt.broker.host")
     String mqttBrokerHost;
 
@@ -44,7 +47,7 @@ public class MqttPublisher {
         options.setConnectionTimeout(10);
 
         String clientId = UUID.randomUUID().toString();
-        IMqttClient publisher = new MqttClient("tcp://" + mqttBrokerHost + ":" + mqttBrokerPort, clientId);
+        IMqttClient publisher = new MqttClient(mqttBrokerProtocol + "://" + mqttBrokerHost + ":" + mqttBrokerPort, clientId);
         publisher.connect(options);
         return publisher;
     }

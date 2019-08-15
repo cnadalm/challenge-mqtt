@@ -1,9 +1,11 @@
 package com.bigfinite.iot.client.boundary;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -21,12 +23,19 @@ public class HttpsResource {
     @GET
     @Path("/publish")
     @Produces(MediaType.TEXT_PLAIN)
-    public String sendMessage() {
+    public String sendMessage(@QueryParam("message") String message) {
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target(serverBaseUrl + "/https");
-        Entity<String> entity = Entity.entity("Hello HTTPS world!", MediaType.TEXT_PLAIN_TYPE);
+        Entity<String> entity = buildMessage(Optional.ofNullable(message));
         Response response = target.request().post(entity);
-        return "HTTPS message published at " + LocalDateTime.now() + " with response : " + response.getStatus();
+        return new StringBuilder("HTTPS message published at ")
+                .append(LocalDateTime.now())
+                .append(" with response : ")
+                .append(response.getStatus()).toString();
+    }
+
+    private Entity<String> buildMessage(Optional<String> message) {
+        return Entity.entity(message.orElse("Hello HTTPS world!"), MediaType.TEXT_PLAIN_TYPE);
     }
 
 }
