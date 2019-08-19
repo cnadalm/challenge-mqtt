@@ -1,5 +1,8 @@
 package com.bigfinite.iot.client.boundary;
 
+import com.bigfinite.iot.client.utils.SSLUtils;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import javax.ws.rs.GET;
@@ -20,11 +23,23 @@ public class HttpsResource {
     @ConfigProperty(name = "server.base.url")
     String serverBaseUrl;
 
+    @ConfigProperty(name = "cert.ca")
+    String certAuthority;
+    @ConfigProperty(name = "cert.public-key")
+    String publicKey;
+    @ConfigProperty(name = "cert.private-key")
+    String privateKey;
+
     @GET
     @Path("/publish")
     @Produces(MediaType.TEXT_PLAIN)
-    public String sendMessage(@QueryParam("message") String message) {
-        Client client = ClientBuilder.newClient();
+    public String sendMessage(@QueryParam("message") String message)
+            throws NoSuchAlgorithmException, IOException, Exception {
+        final Client client = ClientBuilder.newBuilder()
+                .hostnameVerifier((s, session) -> true)
+                .sslContext(SSLUtils.getSSLContext(certAuthority, publicKey, privateKey, ""))
+                .build();
+//        final Client client = ClientBuilder.newClient();
         WebTarget target = client.target(serverBaseUrl + "/https");
         Entity<String> entity = buildMessage(Optional.ofNullable(message));
         Response response = target.request().post(entity);
