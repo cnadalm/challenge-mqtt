@@ -18,6 +18,8 @@ services:
       - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
       - ./mosquitto/ca_certificates/:/etc/mosquitto/ca_certificates/
       - ./mosquitto/certs/:/etc/mosquitto/certs/
+
+
   server:
     image: quarkus/iot-server-jvm
     networks:
@@ -27,29 +29,34 @@ services:
       - mqtt.broker.host=broker
       - mqtt.broker.port=8883
       - mqtt.broker.topic=data
+      - cert.ca=/opt/bigfinite/certs/ca.crt
+      - cert.public-key=/opt/bigfinite/certs/server.crt
+      - cert.private-key=/opt/bigfinite/certs/server.key
+      - quarkus.http.ssl.certificate.key-store-file=/opt/bigfinite/certs/server.keystore
+      - quarkus.http.ssl.certificate.key-store-file-type=JKS
     ports:
       - 9081:9081
-    volumes:
-      - ./mosquitto/ca_certificates/:/opt/bigfinite/ca_certificates/
-      - ./mosquitto/certs/:/opt/bigfinite/certs/
+      - 8443:8443
     depends_on:
       - broker
     
+
   client:
     image: quarkus/iot-client-jvm
     networks:
       - net
     environment:
-      - server.base.url=http://server:9081
+      - server.base.url=https://server:8443
       - mqtt.broker.protocol=ssl
       - mqtt.broker.host=broker
       - mqtt.broker.port=8883
       - mqtt.broker.topic=data
+      - cert.ca=/opt/bigfinite/certs/ca.crt
+      - cert.public-key=/opt/bigfinite/certs/client.crt
+      - cert.private-key=/opt/bigfinite/certs/client.key
+#      - quarkus.http.ssl.certificate.key-store-file=/opt/bigfinite/certs/client.keystore.jks
     ports:
       - 9080:9080
-    volumes:
-      - ./mosquitto/ca_certificates/:/opt/bigfinite/ca_certificates/
-      - ./mosquitto/certs/:/opt/bigfinite/certs/
     depends_on:
       - broker
       - server
