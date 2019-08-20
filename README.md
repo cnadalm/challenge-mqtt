@@ -2,6 +2,8 @@
 
 A continuación se indican los pasos, en orden secuencial, para montar y probar el ejercicio.
 
+He usado Quarkus para desarrollar tanto el cliente como el servidor, y Mosquitto como broker.
+
 
 ## Montar el servidor
 
@@ -44,9 +46,11 @@ $ docker-compose up
 
 Introduciremos las siguientes URLs en un navegador : 
 
+Cliente
 ```
 http://localhost:9080/health
 ```
+
 
 ```
 http://localhost:9081/health
