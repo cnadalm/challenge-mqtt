@@ -40,7 +40,6 @@ public class SSLUtils {
 
         while (bis.available() > 0) {
             caCert = (X509Certificate) cf.generateCertificate(bis);
-            // LOGGER.log(Level.INFO, caCert.toString());
         }
 
         // load client certificate
@@ -48,7 +47,6 @@ public class SSLUtils {
         X509Certificate cert = null;
         while (bis.available() > 0) {
             cert = (X509Certificate) cf.generateCertificate(bis);
-            // LOGGER.log(Level.INFO, caCert.toString());
         }
 
         KeyPair key;

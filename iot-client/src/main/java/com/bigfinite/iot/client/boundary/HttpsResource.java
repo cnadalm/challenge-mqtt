@@ -39,7 +39,6 @@ public class HttpsResource {
                 .hostnameVerifier((s, session) -> true)
                 .sslContext(SSLUtils.getSSLContext(certAuthority, publicKey, privateKey, ""))
                 .build();
-//        final Client client = ClientBuilder.newClient();
         WebTarget target = client.target(serverBaseUrl + "/https");
         Entity<String> entity = buildMessage(Optional.ofNullable(message));
         Response response = target.request().post(entity);

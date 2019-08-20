@@ -5,6 +5,7 @@
     <groupId>dev.challenge.bigfinite</groupId>
     <artifactId>iot-client</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>iot-client</name>
 
     <properties>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -154,5 +155,4 @@
             </build>
         </profile>
     </profiles>
-    <name>iot-client</name>
 </project>

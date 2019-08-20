@@ -33,7 +33,8 @@ services:
       - cert.public-key=/opt/bigfinite/certs/server.crt
       - cert.private-key=/opt/bigfinite/certs/server.key
       - quarkus.http.ssl.certificate.key-store-file=/opt/bigfinite/certs/server.keystore
-      - quarkus.http.ssl.certificate.key-store-file-type=JKS
+      - quarkus.http.ssl.certificate.key-store-password=password
+      - quarkus.http.ssl.certificate.key-store-file-type=PKCS12
     ports:
       - 9081:9081
       - 8443:8443
@@ -46,14 +47,14 @@ services:
     networks:
       - net
     environment:
-      - server.base.url=https://server:8443
       - mqtt.broker.protocol=ssl
       - mqtt.broker.host=broker
       - mqtt.broker.port=8883
       - mqtt.broker.topic=data
+      - server.base.url=https://server:8443
       - cert.ca=/opt/bigfinite/certs/ca.crt
-      - cert.public-key=/opt/bigfinite/certs/client.crt
-      - cert.private-key=/opt/bigfinite/certs/client.key
+      - cert.public-key=/opt/bigfinite/certs/server.crt
+      - cert.private-key=/opt/bigfinite/certs/server.key
 #      - quarkus.http.ssl.certificate.key-store-file=/opt/bigfinite/certs/client.keystore.jks
     ports:
       - 9080:9080
