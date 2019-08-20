@@ -53,8 +53,8 @@ services:
       - mqtt.broker.topic=data
       - server.base.url=https://server:8443
       - cert.ca=/opt/bigfinite/certs/ca.crt
-      - cert.public-key=/opt/bigfinite/certs/server.crt
-      - cert.private-key=/opt/bigfinite/certs/server.key
+      - cert.public-key=/opt/bigfinite/certs/client.crt
+      - cert.private-key=/opt/bigfinite/certs/client.key
 #      - quarkus.http.ssl.certificate.key-store-file=/opt/bigfinite/certs/client.keystore.jks
     ports:
       - 9080:9080
