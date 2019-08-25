@@ -16,21 +16,21 @@ public class MqttPublisher {
 
     static final Logger LOGGER = Logger.getLogger(MqttPublisher.class.getName());
 
-    @ConfigProperty(name = "mqtt.broker.protocol")
+    @ConfigProperty(name = "mqtt.broker.protocol", defaultValue = "tcp")
     String mqttBrokerProtocol;
-    @ConfigProperty(name = "mqtt.broker.host")
+    @ConfigProperty(name = "mqtt.broker.host", defaultValue = "broker")
     String mqttBrokerHost;
-    @ConfigProperty(name = "mqtt.broker.port")
+    @ConfigProperty(name = "mqtt.broker.port", defaultValue = "1883")
     String mqttBrokerPort;
-    @ConfigProperty(name = "mqtt.broker.topic")
+    @ConfigProperty(name = "mqtt.broker.topic", defaultValue = "data")
     String mqttBrokerTopic;
 
-    @ConfigProperty(name = "cert.ca")
-    String certAuthority;
     @ConfigProperty(name = "cert.public-key")
     String publicKey;
     @ConfigProperty(name = "cert.private-key")
     String privateKey;
+    @ConfigProperty(name = "cert.password")
+    String password;
 
     public void publish(String message) throws Exception {
         IMqttClient publisher = createMqttClient();
@@ -50,7 +50,7 @@ public class MqttPublisher {
         options.setCleanSession(true);
         options.setConnectionTimeout(60);
         options.setKeepAliveInterval(60);
-        options.setSocketFactory(SSLUtils.getSocketFactory(certAuthority, publicKey, privateKey, ""));
+        options.setSocketFactory(SSLUtils.getSocketFactory(publicKey, privateKey, password));
 
         String clientId = "broker-producer-client";
         IMqttClient client = new MqttClient(mqttBrokerProtocol + "://" + mqttBrokerHost + ":" + mqttBrokerPort, clientId);

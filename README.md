@@ -84,7 +84,7 @@ El resultado quedará reflejado por la consola de docker-compose. Tenía planead
 
 ## Finalizar el ejercicio
 
-Desde el directorio raíz en consola, pulsar Ctrl+C para parar los contenedores docker y ejecutar el siguiente comando para eliminar las imágenes.
+Desde el directorio raíz en consola, pulsar Ctrl+C para parar los contenedores docker y ejecutar el siguiente comando para eliminarlos.
 
 ```
 $ docker-compose down

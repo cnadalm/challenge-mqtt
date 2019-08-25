@@ -22,6 +22,7 @@ services:
 
   server:
     image: quarkus/iot-server-jvm
+#    image: payara/iot-server-jvm
     networks:
       - net
     environment:
@@ -29,12 +30,13 @@ services:
       - mqtt.broker.host=broker
       - mqtt.broker.port=8883
       - mqtt.broker.topic=data
-      - cert.ca=/opt/bigfinite/certs/ca.crt
+      - quarkus.http.ssl.certificate.key-store-file=/opt/bigfinite/certs/server.keystore.jks
+      - quarkus.http.ssl.certificate.key-store-password=bigfinite
+      - quarkus.http.ssl.certificate.key-store-file-type=JKS
+      - cert.cert-authority=/opt/bigfinite/certs/ca.crt
       - cert.public-key=/opt/bigfinite/certs/server.crt
       - cert.private-key=/opt/bigfinite/certs/server.key
-      - quarkus.http.ssl.certificate.key-store-file=/opt/bigfinite/certs/server.keystore
-      - quarkus.http.ssl.certificate.key-store-password=password
-      - quarkus.http.ssl.certificate.key-store-file-type=PKCS12
+      - cert.password=bigfinite
     ports:
       - 9081:9081
       - 8443:8443
@@ -52,15 +54,15 @@ services:
       - mqtt.broker.port=8883
       - mqtt.broker.topic=data
       - server.base.url=https://server:8443
-      - cert.ca=/opt/bigfinite/certs/ca.crt
       - cert.public-key=/opt/bigfinite/certs/client.crt
       - cert.private-key=/opt/bigfinite/certs/client.key
-#      - quarkus.http.ssl.certificate.key-store-file=/opt/bigfinite/certs/client.keystore.jks
+      - cert.password=bigfinite
     ports:
       - 9080:9080
     depends_on:
       - broker
       - server
+
 
 networks:
   net:

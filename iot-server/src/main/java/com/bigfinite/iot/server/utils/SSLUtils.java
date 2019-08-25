@@ -68,14 +68,14 @@ public class SSLUtils {
         // CA certificate is used to authenticate server
         KeyStore caKs = KeyStore.getInstance(KeyStore.getDefaultType());
         caKs.load(null, null);
-        caKs.setCertificateEntry("ca-certificate", caCert);
+        caKs.setCertificateEntry("cabigfinite", caCert);
         TrustManagerFactory tmf = TrustManagerFactory.getInstance("X509");
         tmf.init(caKs);
 
         // client key and certificates are sent to server so it can authenticate us
         KeyStore ks = KeyStore.getInstance(KeyStore.getDefaultType());
         ks.load(null, null);
-        ks.setCertificateEntry("certificate", cert);
+        ks.setCertificateEntry("server", cert);
         ks.setKeyEntry("private-key", key.getPrivate(), password.toCharArray(),
                 new java.security.cert.Certificate[]{cert});
         KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory

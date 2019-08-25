@@ -19,9 +19,13 @@ FROM fabric8/java-alpine-openjdk8-jre
 # prevent an error with NSS on alpine:3.9
 RUN apk add --no-cache nss
 
-ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager -Djavax.net.debug=ssl:handshake"
-ENV AB_ENABLED=jmx_exporter
 COPY certs /opt/bigfinite/certs
+RUN keytool -storepasswd -new bigfinite -keystore /usr/lib/jvm/java-1.8-openjdk/jre/lib/security/cacerts -storepass changeit
+
+ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+#-Djavax.net.debug=ssl:handshake
+#-Djavax.net.ssl.trustStore=/opt/bigfinite/certs/truststore.jks -Djavax.net.ssl.trustStorePassword=bigfinite
+ENV AB_ENABLED=jmx_exporter
 COPY target/lib/* /deployments/lib/
 COPY target/*-runner.jar /deployments/app.jar
 ENTRYPOINT [ "/deployments/run-java.sh" ]
